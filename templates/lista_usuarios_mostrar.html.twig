@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lista de usuarios{% endblock %}
+
+{% block estilo %}<link href="{{ asset('CSS/apis.css') }}" rel="stylesheet">{% endblock %}
+
+{% block contenido %}
+    <div id="api" class="col-10 seccion">
+        {% block lista %}
+            {{ include ('lista_usuarios.html.twig') }}
+        {% endblock %}
+    </div>
+{% endblock %}

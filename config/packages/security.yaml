@@ -1,0 +1,27 @@
+security:
+
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\Usuario
+                property: nombre_usuario
+
+    password_hashers:
+        App\Entity\Usuario:
+                algorithm: auto
+      
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            lazy: true
+            provider: app_user_provider
+            form_login:
+                login_path: login_erroneo     
+                check_path: control_login
+                default_target_path: comprobar_validez 
+            logout:
+                path: control_logout               
+                target: control_login           
+

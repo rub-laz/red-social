@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="{{ asset('CSS/login.css') }}" rel="stylesheet">
+</head>
+
+<body>
+    <div id="contenedor">
+        <div id="central">
+            <img src="{{asset('recursos/logotipo.png')}}" alt="logo_iri" id="logotipo">
+            <div id="login">
+                {% for flash_message in app.session.flashbag.get('aviso') %}
+                    <div id="alerta">
+                        <p><b>{{ flash_message }}</b></p>
+                    </div>
+                {% endfor %}
+                <div class="titulo">
+                    <h1>Bienvenido</h1>
+                </div>
+                <form action="{{path('control_login')}}" method="post" id="loginform">
+                <label for="_username">Usuario:</label>
+                    <input type="text" name="_username" id="_username" placeholder="@usuario" autocomplete="off">
+                <label for="_password">Contraseña:</label>
+                    <input type="password" name="_password" id="_password" placeholder="Contraseña" autocomplete="off">
+                    <button type="submit" name="enviar">Login</button>
+                </form>
+                <div class="pie-form">
+                    <a href="{{path('olvido_clave')}}">¿Perdiste tu contraseña?</a>
+                    <a href="{{path('registro')}}">¿No tienes Cuenta? Registrate</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

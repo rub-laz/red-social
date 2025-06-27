@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}IRI{% endblock %}</title>
+        <link href="{{ asset('CSS/base.css') }}" rel="stylesheet">
+        <link href="{{ asset('CSS/cabecera.css') }}" rel="stylesheet">
+        <script src="{{ asset('JavaScript/funcionesCabecera.js') }}"></script>
+        {% block estilo%}{% endblock %}
+        {% block javascript%}{% endblock %}
+  </head>
+    <body> 
+
+		{% block body %}
+
+		    {% block header %}
+		    	{{ include('cabecera.html.twig') }}
+		    {% endblock %}
+        <div class="content row col-12">
+            <div id="alerta" class="col-12">
+                {% block alerta%}
+                    {% for flash_message in app.session.flashbag.get('aviso') %}
+                           <p><b>{{ flash_message }}</b></p>
+                    {% endfor %}
+		        {% endblock %} 
+            </div>
+		    {% block contenido %}
+		    {% endblock %}   
+
+         </div>   
+            {% block pie %}
+                <div id="pie" class="col-12 seccion">
+                    <a class="col-3" href="http://www.w3.org/WAI/WCAG1AA-Conformance"
+                    	title="Explicación del Nivel Doble-A de 
+                    	Conformidad">
+                    <img height="32" width="88" 
+                    	src="http://www.w3.org/WAI/wcag1AA"
+                    	alt="Icono de conformidad con el Nivel Doble-A, 
+                    	de las Directrices de Accesibilidad para el 
+                    	Contenido Web 1.0 del W3C-WAI"></a>
+                    <div class="col-1"></div>
+                    <span class="col-4">Creado por Iker Vélez, Rubén Lázaro e Isaac Martín</span>
+                    <div class="col-4"></div>
+                </div>
+            {% endblock %} 
+
+        {% endblock %}
+
+    </body>
+</html>
+

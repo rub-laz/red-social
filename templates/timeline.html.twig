@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Timeline{% endblock %}
+
+{% block estilo %}<link href="{{ asset('CSS/contenido_base.css') }}" rel="stylesheet">{% endblock %}
+
+{% block contenido %}
+    
+    <div class="col-12" id="contenido">
+
+        <div class="col-3 seccion" id="buscar_usuarios">
+            {% block lista %}
+                {{ include ('lista_usuarios.html.twig') }}
+            {% endblock %}
+        </div>
+
+        <div class="col-6 seccion" id="posts">
+
+            {% if posts is defined and posts is not empty %}  
+                {% for post in posts %}
+
+                    {% set usuario = post.getUsuario() %}
+                    {% set comentarios = post.getComentarios() %}
+
+                    <div class="post">
+                        <img  src="{{ asset(usuario.getFotoPerfil()) }}" class="imagen_perfil_post" alt="foto_perfil" >
+                        <a href="{{path('post',{'id_post': post.getIdPost()})}}">
+                            <p class="post_nombre">
+                                {{usuario.getNombre()}} ~ @{{usuario.getNombreUsuario()}}
+                            </p>
+                            <hr>
+                            {% if post.getArchivo()!= null %}
+                                {% if post.getArchivo()|slice(-4) == ".png" or post.getArchivo()|slice(-4) == ".jpg" or post.getArchivo()|slice(-5) == ".jpeg" or post.getArchivo()|slice(-4) == ".gif" %}
+                                    <div class="contenedor_post_imagen">
+                                        <img class="post_imagen" src="{{ asset(post.getArchivo()) }}" alt="archivo">
+                                    </div>
+                                    
+                            
+                                {% else %}
+                                            <span class="adjuntado_archivo">Archivo adjunto</span>
+                                {% endif %}<hr>
+                            {% endif %}
+                            <p class="post_cuerpo">
+                                {{post.getCuerpoPost()}} 
+                            </p>
+                            <hr>
+                            <p class="post_fecha">Publicado el: {{post.getFechaPublicacion()}}  
+                            </p>  
+                            <p class="post_cantidad_comentarios">Comentarios en este post:
+                                {{ comentarios|length }}
+                            </p> 
+                            <p class="post_interacciones">
+                                <img
+                            src="{{ asset('recursos/me_gusta.png') }}" alt="imagen_me_gusta" width="35px">{{post.likes}}<img
+                            src="{{ asset('recursos/no_me_gusta.png') }}" alt="imagen_no_me_gusta" width="35px">{{post.dislikes}}
+                            </p>    
+                        </a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p id="noPosts">Nadie de tus amigos ha publicado nada aún, ¡sé el primero en hacerlo!</p>
+            {% endif %}
+        
+        </div>
+
+        <div id="apis" class="col-3 seccion">
+            {% block tiempo %}
+                {{include('eltiempo.html.twig')}}
+            {% endblock %}
+            <hr>
+            {% block youtube %}
+                {{include('youtube.html.twig')}}
+            {% endblock %}
+        </div>
+    </div>
+{% endblock %}

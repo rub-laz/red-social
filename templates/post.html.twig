@@ -1,0 +1,146 @@
+{% extends 'base.html.twig' %}
+
+{% block title%}Post de {{post.getUsuario().getNombreUsuario}}{% endblock %}
+
+{% block estilo%}
+    <link href="{{ asset('CSS/post.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block contenido %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+            function goBack(){
+                window.history.back();
+            }
+    </script>
+
+    <div class="col-1"></div>
+    <div class="col-10" id="contenido">
+    
+        <a id="volver" onclick="goBack()">Volver a la página anterior</a>  
+    
+        <div class="post">
+
+            {% set usuario = post.getUsuario() %}
+
+            <img src="{{ asset(usuario.getFotoPerfil()) }}" class="imagen_perfil_post" alt="foto_perfil">
+            <p class="post_nombre">
+            <a href="{{path('perfil',{'nombre_usuario':usuario.getNombreUsuario()})}}">{{usuario.getNombre()}} ~ @{{usuario.getNombreUsuario()}}</a>
+            </p>
+            <hr>
+            {% if post.getArchivo() != null %}
+                {% if post.getArchivo()|slice(-4) == ".png" or post.getArchivo()|slice(-4) == ".jpg" or post.getArchivo()|slice(-5) == ".jpeg" or post.getArchivo()|slice(-4) == ".gif" %}
+                    <div class="contenedor_post_imagen">
+                    <img class="post_imagen" src="{{ asset(post.getArchivo()) }}" alt="imagen_archivo">
+                    </div>
+                {% else %}
+                    <a href="{{ asset(post.getArchivo()) }}" download class="archivo_adjunto">Archivo adjunto</a>
+                {% endif %}<hr>
+            {% endif %}
+        
+            <p class="post_cuerpo">
+                {{post.getCuerpoPost()}}
+            </p>
+
+            <hr>
+
+            <p class="post_interacciones">
+                 <a href="#" id='enlace_likes'><img
+                    src="{{ asset('recursos/me_gusta.png') }}" alt="imagen_me_gusta" width="30px"></a>
+            <span id="cantidadLikes">{{post.getLikes()}}</span>
+                <script>
+    
+            $(document).ready(function() {
+                var postId = "{{ app.request.attributes.get('_route_params')['id_post'] }}";
+                $('#enlace_likes').click(function(event) {
+                        event.preventDefault();
+                        $.ajax({
+                            type: 'GET',
+                            url: '/procesarLike',
+                            data: { post_id: postId },
+                            success: function(response) {          
+                            var likes = response;
+                            $('#cantidadLikes').text(likes);
+                            }
+                        });
+                    });
+                });
+</script>
+
+
+                <a href="#" id='enlace_dislikes'>
+                <img src="{{ asset('recursos/no_me_gusta.png') }}" alt="imagen_no_me_gusta" width="35px"></a>                
+                <span id="cantidadDislikes">{{post.getDislikes()}}</span>
+
+           <script>
+                $(document).ready(function() {
+                    var postId = "{{ app.request.attributes.get('_route_params')['id_post'] }}";
+                    $('#enlace_dislikes').click(function(event) {
+                        event.preventDefault();
+                        $.ajax({
+                            type: 'GET',
+                            url: '/procesarDislike',
+                            data: { post_id: postId },
+                            success: function(response) {          
+                            var dislikes = response;
+                            $('#cantidadDislikes').text(dislikes);
+                            }
+                        });
+                    });
+                });
+                </script>
+
+
+            </p>
+
+            <p class="post_fecha">Publicado el: {{post.getFechaPublicacion()}} </p>
+            <hr>
+            <div id="caja_comentarios">
+                <form id="form" action="{{ path('procesaFormularioPost', {'id_post': post.getIdPost()}) }}" method="post" enctype="multipart/form-data">
+                    <!-- Contenido del formulario -->
+                    <div id="publicar">
+                    <label for="texto_comentario">Escriba un comentario:</label>
+                        <textarea name="texto_comentario" id="texto_comentario" rows="1" placeholder="Añade un comentario (max. 140 caracteres)"></textarea>
+                        <button type="submit" id="boton_publicar">Publicar</button>
+                    </div>
+                </form>
+
+               
+            
+                <hr>
+
+                {% if post.getComentarios() is defined and post.getComentarios() is not empty%}
+                    {% for comentario in post.comentarios %}
+
+                         <div class="comentario">
+                <a href="{{path('perfil',{'nombre_usuario':comentario.usuario.getNombreUsuario()})}}"
+                    class="comentario_usuario">
+                    {{comentario.getUsuario().getNombre()}}
+                </a>
+                <p class="comentario_cuerpo">
+                    {{comentario.getCuerpoComentario()}}
+                </p>
+                <p class="comentario_fecha">
+                    Comentado el:
+                    {{comentario.getFechaComentario()}}
+                </p>
+            </div>
+                        
+                        <hr>
+
+                    {% endfor %} 
+                {% else %}   
+                    <p class="comentario">No hay ningún comentario en este post</p>
+                    <hr>
+                {% endif %} 
+            </div>
+
+        </div>
+    
+    </div>
+{% endblock %}

@@ -1,0 +1,44 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restablecer clave</title>
+    <link href="{{ asset('CSS/registro_clave.css') }}" rel="stylesheet">
+</head>
+
+<body>
+    <div id="contenedor">
+        <div id="central">
+            <img src="{{asset('recursos/logotipo.png')}}" alt="logo_iri" id="logotipo">
+            <div id="login">
+
+                    {% for flash_message in app.session.flashbag.get('aviso') %}
+                        <div id="alerta">
+                            <p><b>{{ flash_message }}</b></p>
+                        </div>
+                    {% endfor %}
+
+                <div class="titulo">
+                <h1>Restablecer clave</h1>
+                </div>
+                <form action="{{path('cambio_clave', {'codigo': codigo, 'id': id})}}" method="post" id="loginform">
+
+                    <label for="codigoUser">Código*:</label><input type="text" name="codigoUser" placeholder="Código" autocomplete="off">
+
+                    <label for="claveNueva">Clave Nueva*:</label><input type="text"name="claveNueva"  placeholder="Clave nueva" autocomplete="off">
+
+                    <label for="claveNuevaBis">Repita Clave Nueva*:</label><input type="text" name="claveNuevaBis" placeholder="Clave nueva repetida" autocomplete="off">
+
+
+                    <button type="submit" name="enviar">Cambiar</button>
+                </form>
+            </div>
+            <div class="inferior">
+                <a href="{{path('control_login')}}">Atrás</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

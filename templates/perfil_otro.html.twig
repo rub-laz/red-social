@@ -1,0 +1,137 @@
+{% extends 'base.html.twig' %}
+
+{% block title%}Perfil de {{ (usuario.getNombre()) }}{% endblock %}
+
+{% block estilo%}
+    <link href="{{ asset('CSS/contenido_base.css') }}" rel="stylesheet">
+    <link href="{{ asset('CSS/perfil.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block contenido %}
+
+    <div class="col-12 seccion" id="info">
+        <!-- Imagen de perfil -->
+        <div class="col-3" id="imagen_perfil">
+            <div id="contenedor_img">
+                <img src="{{ asset(usuario.getFotoPerfil()) }}" alt="foto del perfil visitado de {{usuario.getNombre()}}" id="foto_perfil">
+            </div>
+        </div>
+        <!-- Nombre -->
+        <div class="col-4" id="nombre_bio">
+            <div class="row">
+                <div class="col-12">
+                    <p id="nombre">{{usuario.getNombre()}}</p> <p id="nombreUsuario">@{{usuario.getNombreUsuario()}}</p>
+                </div>
+            </div><br>
+            <!-- Biografía -->
+            <div class="row">
+                        <!-- Biografía -->
+                <div class="col-12" id="bio">
+                    {{usuario.getBio()}}
+                </div>
+            </div>
+        </div>
+        <!-- Botón relacionado con la amistad entre el usuario que entra al perfil y el usuario del propio perfil -->
+        <div class="col-5" id="edicion">
+            <div class="row">
+                <div class="col-12">
+                    {% if amistad is defined %}
+                        {% if amistad == 1 %}
+                            <a href="{{path('dejar',{'id_1':usuario.getId(),'id_2':app.user.getId()})}}" id="amistad">Dejar de ser amigos</a>
+                        {% elseif amistad == 2 %}
+                                <a href="{{path('cancelar',{'id_1':usuario.getId(),'id_2':app.user.getId()})}}" id="amistad">Cancelar solicitud</a>
+                        {% elseif amistad == 3 %}
+                                <a href="{{path('rechazar',{'id_1':usuario.getId(),'id_2':app.user.getId()})}}" id="amistad">Rechazar solicitud</a>
+                                <a href="{{path('aceptar',{'id_1':usuario.getId(),'id_2':app.user.getId()})}}" id="amistad">Aceptar solicitud</a>
+                        {% elseif amistad == 4 %}
+                                <a href="{{path('solicitar',{'id_1':usuario.getId(),'id_2':app.user.getId()})}}" id="amistad">Solicitar amistad</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+            <div id="estadisticas">
+                <!-- Estadísticas: número de post y número de amistades -->
+                <div class="col-6">
+                        <p>Publicaciones <br>{{usuario.getPosts()|length}}</p>
+                </div>     
+                <div class="col-6">           
+                    <p>Amistades <br>{{usuario.amigos()}}</p>
+                </div>
+            </div> 
+        </div>
+    </div>
+
+
+
+    <div class="col-12" id="contenido">
+
+        <div class="col-3 seccion"  id="buscar_usuarios">
+            {% block lista %}
+                {{ include ('lista_usuarios.html.twig') }}
+            {% endblock %}
+        </div>
+
+        <div class="col-6 seccion" id="posts">
+            
+            {% if amistad is defined and (amistad == 1 or app.user.getRol() == 1) %}
+                {% if posts is defined and posts is not empty %}
+                    {% for post in posts %}
+
+
+                        {% set comentarios = post.getComentarios() %}
+
+                        <div class="post">
+                            <img  src="{{ asset(usuario.getFotoPerfil()) }}" class="imagen_perfil_post" alt="foto_perfil" >
+                            <a href="{{path('post',{'id_post': post.getIdPost()})}}">
+                                <p class="post_nombre">
+                                    {{usuario.getNombre()}} ~ @{{usuario.getNombreUsuario()}}
+                                </p>
+                                <hr>
+                                {% if post.getArchivo()!= null %}
+                                    {% if post.getArchivo()|slice(-4) == ".png" or post.getArchivo()|slice(-4) == ".jpg" or post.getArchivo()|slice(-4) == ".jpeg" or post.getArchivo()|slice(-4) == ".gif" %}
+                                        <div class="contenedor_post_imagen">
+                                            <img class="post_imagen" src="{{ asset(post.getArchivo()) }}" alt="archivo">
+                                        </div>
+
+
+                                    {% else %}
+                                                <span class="adjuntado_archivo">Archivo adjunto</span>
+                                    {% endif %}<hr>
+                                {% endif %}
+                                <p class="post_cuerpo">
+                                    {{post.getCuerpoPost()}} 
+                                </p>
+                                <hr>
+                                <p class="post_fecha">Publicado el: {{post.getFechaPublicacion()}}  
+                                </p>  
+                                <p class="post_cantidad_comentarios">Comentarios en este post:
+                                    {{ comentarios|length }}
+                                </p> 
+                                <p class="post_interacciones">
+                                    <img
+                                src="{{ asset('recursos/me_gusta.png') }}" alt="imagen_me_gusta" width="35px">{{post.likes}}<img
+                                src="{{ asset('recursos/no_me_gusta.png') }}" alt="imagen_no_me_gusta" width="35px">{{post.dislikes}}
+                                </p>    
+                            </a>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p id="noPosts">@{{usuario.getNombreUsuario()}} aún no ha publicado nada</p>
+                {% endif %}
+            {% else %}
+                <p id="noPosts">No puedes ver los posts de {{usuario.getNombreUsuario()}} porque aún no sois amigos</p>
+            {% endif %}
+        
+        </div>
+
+        <div id="apis" class="col-3 seccion">
+            {% block tiempo %}
+                {{include('eltiempo.html.twig')}}
+            {% endblock %}
+            <hr>
+            {% block youtube %}
+                {{include('youtube.html.twig')}}
+            {% endblock %}
+        </div>
+    </div>
+{% endblock %}

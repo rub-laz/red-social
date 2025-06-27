@@ -1,0 +1,214 @@
+{% extends 'base.html.twig' %}
+
+{% block title%}Zona admin{% endblock %}
+
+{% block estilo%}
+    <link href="{{ asset('CSS/zona_admin.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block javascript %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#titulo_usuario").click(function () {
+            if ($(".contenido_usuarios").css("display") === "block") {
+                $(".contenido_usuarios").slideUp('500');
+                $(".linea_usuario").slideUp('500');
+                $(".flecha_usuarios").attr("src","iconos/flecha_abajo.png");
+            } else {
+                $(".contenido_usuarios").slideDown('500');
+                $(".linea_usuario").slideDown('500');
+                $(".flecha_usuarios").attr("src","iconos/flecha_arriba.png");
+            }
+        });
+        $("#titulo_posts").click(function () {
+            if ($(".contenido_posts").css("display") === "block") {
+                $(".contenido_posts").slideUp('500');
+                $(".linea_post").slideUp('500');
+                $(".flecha_posts").attr("src","iconos/flecha_abajo.png");
+            } else {
+                $(".contenido_posts").slideDown('500');
+                $(".linea_post").slideDown('500');
+                $(".flecha_posts").attr("src","iconos/flecha_arriba.png");
+            }
+        });
+        $("#titulo_comentarios").click(function () {
+            if ($(".contenido_comentarios").css("display") === "block") {
+                $(".contenido_comentarios").slideUp('500');
+                $(".linea_comentario").slideUp('500');
+                $(".flecha_comentarios").attr("src","iconos/flecha_abajo.png");
+            } else {
+                $(".contenido_comentarios").slideDown('500');
+                $(".linea_comentario").slideDown('500');
+                $(".flecha_comentarios").attr("src","iconos/flecha_arriba.png");
+            }
+        });
+    });
+</script>
+{% endblock %}
+
+
+{% block contenido %}
+
+
+    <div class="col-1"></div>
+
+    <div class="col-10" id="contenido">
+
+        {% if usuarios is defined and usuarios is not empty %}
+
+
+            <div class="seccion" id="usuarios">
+
+                <div class="titulo">
+                <h1 id="titulo_usuario"><img class="flecha_usuarios" src="{{asset('iconos/flecha_abajo.png')}}" alt="">Usuarios<img class="flecha_usuarios" src="{{asset('iconos/flecha_abajo.png')}}" alt=""></h1>
+                </div>
+
+                <div class="contenido contenido_usuarios">
+                <hr class="linea_usuario linea">
+
+                {% for usuario in usuarios %}
+                    <div class="usuario row">
+
+                        <div class="datos col-6">
+                        
+                            <img src="{{ asset(usuario.getFotoPerfil()) }}" alt="foto del perfil visitado de {{usuario.getNombre()}}" class="foto_perfil">
+                            <a href="{{path('perfil',{'nombre_usuario': usuario.getNombreUsuario() })}}" class="enlace_usuario">{{usuario.getNombre()}} ~ @{{usuario.getNombreUsuario()}}</a>
+
+                        </div>
+
+                        <div class="botones col-6">
+
+                            <a href="{{path('borrar_usuario',{'id':usuario.getId()})}}" class="accion_admin">Borrar usuario</a>
+
+                            {% if usuario.getCuentaActivada() == '2' %}
+                                <a href="{{path('desbloquear_usuario',{'id':usuario.getId()})}}" class="accion_admin">Desbloquear usuario</a>
+                            {% else %}
+                                <a href="{{path('bloquear_usuario',{'id':usuario.getId()})}}" class="accion_admin">Bloquear usuario</a>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+                </div>
+            </div>
+
+        {% endif %}
+
+        {% if posts is defined and posts is not empty %}
+
+
+
+            <div class="seccion" id="posts">
+
+                <div class="titulo">
+                <h1 id="titulo_posts"><img class="flecha_posts" src="{{asset('iconos/flecha_abajo.png')}}" alt="">Posts<img class="flecha_posts" src="{{asset('iconos/flecha_abajo.png')}}" alt=""></h1>
+                </div>
+
+                <div class="contenido contenido_posts">
+                <hr class="linea_post linea">
+
+                {% for post in posts %}
+                    <div class="post">
+
+                        <div class="datos col-10">
+
+                            <a href="{{path('post',{'id_post': post.getIdPost() })}}"  class="enlace_post">
+                                <p>
+                                    <b>Cuerpo: </b>
+                                    {{post.getCuerpoPost()}}
+                                </p>
+                                <p>
+                                    <b>Autor: </b>
+                                    @{{post.getUsuario().getNombreUsuario()}}
+                                </p>
+                                <p>
+                                    <b>¿Tiene archivo adjunto?: </b>
+                                    {% if post.getArchivo() is defined and post.getArchivo() is not empty %}
+                                        Sí
+                                    {% else %}
+                                        No
+                                    {% endif %}
+                                </p>
+                                <p>
+                                    <b>Likes: </b>
+                                    {{post.getLikes()}}
+                                </p>
+                                <p>
+                                    <b>Dislikes: </b>
+                                    {{post.getDislikes()}}
+                                </p>
+                                <p>
+                                    <b>Fecha de publicación: </b>
+                                    {{post.getFechaPublicacion()}}
+                                </p>
+                            </a>
+                        </div>
+
+                        <div class="botones col-2">
+
+                        <a href="{{path('borrar_post',{'id':post.getIdPost()})}}" class="accion_admin">Borrar post</a>
+
+                        </div>
+
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+
+        {% endif %}
+
+
+        {% if comentarios is defined and comentarios is not empty%}
+
+
+            <div class="seccion" id="comentarios">
+
+                <div class="titulo">
+                <h1 id="titulo_comentarios"><img class="flecha_comentarios" src="{{asset('iconos/flecha_abajo.png')}}" alt="">Comentarios<img class="flecha_comentarios" src="{{asset('iconos/flecha_abajo.png')}}" alt=""></h1>
+                </div>
+
+                <div class="contenido contenido_comentarios">
+                <hr class="linea_comentario linea">
+
+                {% for comentario in comentarios %}
+                    <div class="comentario">
+
+                        <div class="datos col-10">
+
+                            <a href="{{path('post',{'id_post': comentario.getPost().getIdPost() })}}"  class="enlace_comentario">
+                                <p>
+                                    <b>Cuerpo: </b>
+                                    {{comentario.getCuerpoComentario()}}
+                                </b>
+                                <p>
+                                    <b>Autor: </b>
+                                    @{{comentario.getUsuario().getNombreUsuario()}}
+                                </p>
+                                <p>
+                                    <b>Fecha de publicación: </b>
+                                    {{comentario.getFechaComentario()}}
+                                </p>
+                            </a>
+
+                        </div>
+
+                        <div class="botones col-2">
+
+                            <a href="{{path('borrar_comentario',{'id':comentario.getIdComentario()})}}" class="accion_admin">Borrar comentario</a>
+                    
+                        </div>
+                    
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+
+        {% endif %}
+    </div>
+
+{% endblock %}

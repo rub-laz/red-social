@@ -1,0 +1,18 @@
+<header class="col-12" id="cabecera">
+    {% if app.user is defined and app.user is not empty%}
+        <div id="menu" onclick="toggleMenu()"><img src="{{asset('iconos/menu.png')}}" alt="icono_menu" class="icono"></div>
+        <div class="col-1" id="logo"><a href="{{path('timeline')}}"><img src="{{asset('recursos/logotipo.png')}}" alt="logo_iri" id="logoImagen"></a></div>
+        <div id="menu_elementos">
+            <div class="col-2" id="perfil"><a href="{{path('perfil',{'nombre_usuario':app.user.getNombreUsuario})}}"><img src="{{asset('iconos/icono_perfil.png')}}" alt="icono_mi_perfil" class="icono">MI PERFIL</a></div>
+            <div class="col-2" id="timeline"><a href="{{path('timeline')}}"><img src="{{asset('iconos/casa.png')}}" alt="icono_timeline" class="icono">TIMELINE</a></div>
+            {% if app.user.getRol() == 1 %}
+                <div class="col-2" id="zona_admin"><a href="{{path('zona_admin')}}"><img src="{{asset('iconos/zon_admin.png')}}" alt="icono_admin" class="icono">ADMIN</a></div>
+            {% endif %}
+            <div class="col-1" id="lista"><a href="{{path('listarUsuarios_mostrar')}}"><img src="{{asset('iconos/icono_usuarios.png')}}" alt="icono_usuarios" class="icono">USUARIOS</a></div>
+            <div class="col-1" id="tiempo"><a href="{{path('tiempo_mostrar')}}"><img src="{{asset('iconos/nube.png')}}" alt="icono_tiempo" class="icono">EL TIEMPO</a></div>
+            <div class="col-1" id="videos"><a href="{{path('youtube_mostrar')}}"><img src="{{asset('iconos/youtube.png')}}" alt="icono_youtube" class="icono">BUSCAR UN VIDEO</a></div>
+            <div class="col-2" id="div_modoOscuro"><button  id="modoOscuro" onclick="cambiarModo()"><img src="{{asset('iconos/luna.png')}}" alt="icono_modo_oscuro_activar" id="iconoOscuro" class="icono"><span id="botonTexto">Activar modo oscuro<span></button></div>
+            <div class="col-2" id="cerrar_sesion"><a href="{{path('control_logout')}}"><img src="{{asset('iconos/cerrar_sesion.png')}}" alt="icono_cerrar_sesion" class="icono">CERRAR SESION</a></div>
+        </div>
+    {% endif %}
+</header>

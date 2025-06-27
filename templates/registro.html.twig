@@ -1,0 +1,48 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <link href="{{ asset('CSS/registro_clave.css') }}" rel="stylesheet">
+    <script src="{{ asset('JavaScript/funcionesRegistro.js') }}"></script>
+</head>
+
+<body>
+    <div id="contenedor">
+        <div id="central">
+            <img src="{{asset('recursos/logotipo.png')}}" alt="logo_iri" id="logotipo">
+            <div id="login">
+                    {% for flash_message in app.session.flashbag.get('aviso') %}
+                    <div id="alerta">
+                        <p><b>{{ flash_message }}</b></p>
+                    </div>
+                    {% endfor %}
+                <div class="titulo">
+                <h1>Registro</h1>
+                </div>
+                <form onsubmit="return validar()" action="{{ path('registro') }}" method="post" id="loginform" enctype="multipart/form-data">
+
+                    <label for="nombreUsuario">Usuario*:</label><input type="text" name="nombreUsuario" placeholder="@usuario" id="inputNombreUsuario" autocomplete="off">
+
+                    <label for="nombre">Nombre*:</label><input type="text" name="nombre" placeholder="Nombre" id="inputNombre" autocomplete="off">
+
+                    <label for="clave">Clave*:</label><input type="password" name="clave" placeholder="Contraseña" id="inputClave" autocomplete="off">
+
+                    <label for="correo">Correo*:</label><input type="text" name="correo" placeholder="Email" id="inputCorreo" autocomplete="off">
+
+                    <label for="fotoPerfil">Foto de perfil:</label><input type="file" name="fotoPerfil" id="inputFotoPerfil" autocomplete="off">
+
+                    <label for="bio">Bio(150max):</label><input type="textarea" name="bio" placeholder="Biografía" id="inputBio" autocomplete="off">
+
+                    <button type="submit" name="enviar">Registrar</button>
+                </form>
+            </div>
+            <div class="inferior">
+                <a href="{{path('control_login')}}">Atrás</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

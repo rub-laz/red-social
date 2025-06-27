@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title%}Editar perfil{% endblock %}
+
+{% block estilo%}
+    <link href="{{ asset('CSS/editarPerfil.css') }}" rel="stylesheet">
+{% endblock %}
+
+ 
+
+{% block contenido %}
+    <div class="col-1">
+    </div>
+    <div class="col-10" id="contenido">
+    
+                <a href="{{path('perfil',{'nombre_usuario':app.user.getNombreUsuario()})}}" id="volver">Volver</a>
+
+            <div id="cambiar_imagen" class="seccion">
+                    <div id="form_imagen">
+                        <h1>Foto de perfil</h1>
+                        <form id="formularioImagen" action="" method="post" enctype="multipart/form-data">
+                            <input type="file" name="fotoPerfil">
+                            <br><br>
+                            <input type="hidden" name="editarFoto" value="actualizar">
+                            <input type="submit" value="Actualizar">
+                            <input type="hidden" name="editarFoto" value="borrar">
+                        </form>
+                    </div>
+                    
+                    <div id="imagenes">
+                        <img src="{{usuario.getFotoPerfil()}}" alt="foto de perfil de {{usuario.getNombre()}}" id="mostrar_imagen">
+                    
+                        <img id="icono_papelera"src="{{ asset('recursos/papelera.png') }}" id="papelera" alt="imagen de una papelera que sirve para borrar la imagen de perfil">
+                    </div>
+            </div>
+
+
+
+            <div id="cambiar_bio" class="seccion">
+                <div id="form_bio">
+                    <h1>Biografía</h1>
+                    <form action="" method="post">
+                        <textarea name="bio_nueva" id="bio_nueva" rows="2" placeholder="(max. 140 caracteres)"></textarea>
+                        <br><br>
+                        <input type="submit" value="Actualizar">
+                    </form>
+                </div>
+                <div id="mostrar_bio">
+                    <span>
+                        {{ usuario.getBio() }}
+                    </span>
+                </div>
+            </div>
+            
+                <a href="{{path('aviso_cuenta')}}" id="eliminar">Cerrar cuenta</a>
+
+    </div>
+{% block javascript %}
+    <script src="{{ asset('JavaScript/funcionesArrastrar.js') }}"></script>
+{% endblock %} 
+
+{% endblock %}
